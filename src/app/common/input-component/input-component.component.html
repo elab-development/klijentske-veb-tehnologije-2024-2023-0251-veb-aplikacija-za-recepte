@@ -1,0 +1,14 @@
+<input 
+  [type]="type"
+  [value]="value"
+  [disabled]="disabled"
+  [readonly]="readonly"
+  [placeholder]="placeholder"
+  [attr.maxlength]="maxlength"
+  [attr.minlength]="minlength"
+  [required]="required"
+  (input)="onInput($event)"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+  class="px-4 py-1 rounded-full text-dark bg-light border-[2px] border-separator focus:border-dark/70 outline-none transition-colors duration-200 w-full"
+/>
