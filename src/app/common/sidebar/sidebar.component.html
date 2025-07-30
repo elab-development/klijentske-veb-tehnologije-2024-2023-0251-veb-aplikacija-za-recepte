@@ -1,0 +1,70 @@
+<aside 
+  class="sidebar transition-all duration-300 ease-in-out border-r-2 border-separator bg-light"
+  [ngClass]="{
+    'w-64': isOpen,
+    'w-16': !isOpen
+  }"
+>
+  
+  <div class="sidebar-header p-4 border-b border-separator">
+    <div class="flex items-center justify-between">
+      <h3 
+        *ngIf="isOpen && title" 
+        class="text-lg font-semibold text-dark truncate"
+      >
+        {{ title }}
+      </h3>
+      <button 
+        (click)="onToggle()"
+        class="p-2 rounded-full hover:bg-separator/20 text-dark transition-colors"
+        [title]="isOpen ? 'Collapse sidebar' : 'Expand sidebar'"
+      >
+        <span class="text-sm">{{ isOpen ? '◀' : '▶' }}</span>
+      </button>
+    </div>
+  </div>
+
+  
+  <nav class="sidebar-nav p-2">
+    <ul class="space-y-1">
+      <li *ngFor="let item of items">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="bg-so1 text-dark"
+          (click)="onItemClick(item)"
+          class="sidebar-item flex items-center p-3 rounded-lg text-dark hover:bg-separator/20 transition-colors cursor-pointer"
+          [ngClass]="{
+            'opacity-50 cursor-not-allowed': item.disabled,
+            'justify-center': !isOpen,
+            'justify-start': isOpen
+          }"
+          [title]="!isOpen ? item.label : ''"
+        >
+          
+          <span 
+            *ngIf="item.icon" 
+            class="sidebar-icon flex-shrink-0"
+            [ngClass]="{
+              'mr-3': isOpen,
+              'mr-0': !isOpen
+            }"
+          >
+            <img 
+              [src]="item.icon" 
+              [alt]="item.label" 
+              class="w-5 h-5"
+            />
+          </span>
+          
+          
+          <span 
+            *ngIf="isOpen" 
+            class="sidebar-label truncate"
+          >
+            {{ item.label }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>

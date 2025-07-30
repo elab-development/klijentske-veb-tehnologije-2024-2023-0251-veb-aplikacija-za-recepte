@@ -22,6 +22,6 @@ export class HeaderComponent {
     logout() {
         this.authService.logout();
         this.router.navigate(['/login']);
-        this.dropdownOpen = false; // Close dropdown after logout
+        this.dropdownOpen = false; 
     }
 }

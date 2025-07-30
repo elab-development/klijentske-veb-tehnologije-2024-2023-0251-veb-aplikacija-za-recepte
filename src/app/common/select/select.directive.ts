@@ -1,25 +1,25 @@
-import { Directive, ElementRef, Renderer2, OnInit, DoCheck } from '@angular/core';
+import { Directive, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-    selector: '[receptiInput]',
+    selector: '[receptiSelect]',
 })
-export class ReceptiInputDirective implements OnInit, DoCheck {
+export class ReceptiSelectDirective implements OnInit {
     private defaultClasses = [
-    'px-4',
-    'py-1',
-    'rounded-full',
-    'bg-dark/30',
-    'text-light',
-    'border-[2px]',
-    'border-so2',
-    'focus:ring-0',
-    'focus:border-separator',
-    'transition-colors',
-    'duration-500',
-    'outline-none',
-    'placeholder-light/90',
-    'placeholder:text-light/90'
+        'px-4',
+        'py-1',
+        'rounded-full',
+        'bg-dark/30',
+        'text-light',
+        'border-[2px]',
+        'border-separator',
+        'focus:ring-0',
+        'focus:border-so2',
+        'transition-colors',
+        'duration-500',
+        'outline-none',
+        'appearance-none',
+        'cursor-pointer',
     ];
 
     constructor(
@@ -34,7 +34,7 @@ export class ReceptiInputDirective implements OnInit, DoCheck {
         this.renderer.removeClass(this.el.nativeElement, 'border-so2');
         this.renderer.removeClass(
             this.el.nativeElement,
-            'border-dark/50'
+            'border-separator'
         );
 
         if (touched && !valid) {
@@ -42,7 +42,7 @@ export class ReceptiInputDirective implements OnInit, DoCheck {
         } else {
             this.renderer.addClass(
                 this.el.nativeElement,
-                'border-dark/50'
+                'border-separator'
             );
         }
     };

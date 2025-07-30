@@ -1,7 +1,6 @@
 <header
-    class="app-header flex items-center justify-between px-6 border-b-2 border-[#757473]"
+    class="app-header fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 border-b-2 border-[#757473] bg-light/20 backdrop-blur-sm"
 >
-    <!-- Logo (Left) -->
     <div class="flex items-center logo">
         <a [routerLink]="['/home']" class="flex items-center">
             <img src="assets/logo.png" alt="App Logo" class="h-16" />
@@ -9,7 +8,6 @@
         </a>
     </div>
 
-    <!-- Profile Icon & Dropdown (Right) -->
     <div class="relative profile-menu">
         <button
             (click)="toggleDropdown()"
