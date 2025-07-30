@@ -1,0 +1,28 @@
+<div class="flex flex-col items-center justify-center w-full h-full p-6">
+  <h1 class="text-2xl font-bold mb-8">Profil</h1>
+  
+  
+  <div class="mb-8">
+    <app-button 
+      variant="primary" 
+      (buttonClick)="toggleRecipeForm()"
+      class="px-6 py-2"
+    >
+      {{ showRecipeForm ? 'Sakrij formu' : 'Dodaj novi recept' }}
+    </app-button>
+  </div>
+
+  
+  <div *ngIf="showRecipeForm" class="w-full max-w-2xl">
+    <app-form 
+      variant="recipe" 
+      (formSubmit)="onRecipeSubmit($event)"
+      submitButtonText="Sačuvaj recept"
+    ></app-form>
+  </div>
+
+  
+  <div *ngIf="!showRecipeForm" class="text-center">
+    <p class="text-lg text-so2/70">Ovde možete upravljati svojim receptima i profilom.</p>
+  </div>
+</div>

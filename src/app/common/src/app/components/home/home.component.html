@@ -1,0 +1,44 @@
+<div class="relative w-full h-[50vh] bg-cover bg-center bg-no-repeat" style="background-image: url('assets/cookie-bg.png');">
+  <div class="absolute inset-0 bg-dark/30 flex items-center justify-center">
+    <div class="text-center text-white px-6 max-w-4xl">
+      <h1 class="text-4xl md:text-6xl font-bold mb-8 drop-shadow-lg">
+        Dobrodošli u Recepti
+      </h1>
+      <p class="text-xl md:text-2xl mb-12 drop-shadow-md">
+        Napravljeno od kuvara za kuvare!
+      </p>
+      
+      <app-button 
+        variant="primary" 
+        (buttonClick)="navigateToBrowse()"
+        class="text-lg px-8 py-3 drop-shadow-lg"
+      >
+        Pretraži recepte
+      </app-button>
+    </div>
+  </div>
+</div>
+
+<div class="flex w-full h-[50vh]">
+  <div class="flex-1 bg-so1 flex items-center justify-center p-8">
+    <div class="text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-so2 mb-4">
+        Otkrijte nove ukuse
+      </h2>
+      <p class="text-lg text-so2/80">
+        Istražite našu kolekciju autentičnih recepata koji će vas inspirisati u kuhinji.
+      </p>
+    </div>
+  </div>
+  
+  <div class="flex-1 bg-so2 flex items-center justify-center p-8">
+    <div class="text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-light mb-4">
+        Podelite svoje recepte
+      </h2>
+      <p class="text-lg text-light/90">
+        Pridružite se zajednici kuvara i podelite svoje omiljene recepte sa drugima.
+      </p>
+    </div>
+  </div>
+</div>

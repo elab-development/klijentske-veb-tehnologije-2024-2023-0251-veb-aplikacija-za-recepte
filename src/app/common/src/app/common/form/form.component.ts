@@ -1,0 +1,223 @@
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { ButtonComponent } from '../button/button.component';
+import { ReceptiInputDirective } from '../input/input.directive';
+import { ReceptiSelectDirective } from '../select/select.directive';
+import { ReceptiFormDirective } from './form.directive';
+
+export type FormVariant = 'login' | 'signup' | 'recipe';
+
+export interface FormField {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'password' | 'number' | 'textarea' | 'select';
+  placeholder?: string;
+  required?: boolean;
+  options?: { value: string; label: string }[];
+  validators?: any[];
+}
+
+@Component({
+  selector: 'app-form',
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    RouterLink,
+    ButtonComponent, 
+    ReceptiInputDirective, 
+    ReceptiSelectDirective,
+    ReceptiFormDirective
+  ],
+  templateUrl: './form.component.html',
+  styleUrl: './form.component.scss'
+})
+export class FormComponent implements OnInit {
+  @Input() variant: FormVariant = 'login';
+  @Input() customFields: FormField[] = [];
+  @Input() submitButtonText: string = 'Potvrdi';
+  @Input() isLoading: boolean = false;
+  @Output() formSubmit = new EventEmitter<any>();
+
+  form!: FormGroup;
+  formTitle: string = '';
+  formFields: FormField[] = [];
+
+  constructor(private fb: FormBuilder, private router: Router) {}
+
+  ngOnInit() {
+    this.setupFormByVariant();
+    this.buildForm();
+  }
+
+  private setupFormByVariant() {
+    switch (this.variant) {
+      case 'login':
+        this.formTitle = 'Prijava';
+        this.formFields = [
+          {
+            name: 'email',
+            label: 'Email',
+            type: 'email',
+            placeholder: 'Unesite vaš email',
+            required: true,
+            validators: [Validators.required, Validators.email]
+          },
+          {
+            name: 'password',
+            label: 'Lozinka',
+            type: 'password',
+            placeholder: 'Unesite vašu lozinku',
+            required: true,
+            validators: [Validators.required, Validators.minLength(6)]
+          }
+        ];
+        break;
+
+      case 'signup':
+        this.formTitle = 'Registracija';
+        this.formFields = [
+          {
+            name: 'name',
+            label: 'Ime i prezime',
+            type: 'text',
+            placeholder: 'Unesite vaše ime i prezime',
+            required: true,
+            validators: [Validators.required, Validators.minLength(2)]
+          },
+          {
+            name: 'email',
+            label: 'Email',
+            type: 'email',
+            placeholder: 'Unesite vaš email',
+            required: true,
+            validators: [Validators.required, Validators.email]
+          },
+          {
+            name: 'password',
+            label: 'Lozinka',
+            type: 'password',
+            placeholder: 'Unesite lozinku',
+            required: true,
+            validators: [Validators.required, Validators.minLength(6)]
+          },
+          {
+            name: 'confirmPassword',
+            label: 'Potvrdite lozinku',
+            type: 'password',
+            placeholder: 'Potvrdite vašu lozinku',
+            required: true,
+            validators: [Validators.required]
+          }
+        ];
+        break;
+
+      case 'recipe':
+        this.formTitle = 'Dodaj recept';
+        this.formFields = [
+          {
+            name: 'title',
+            label: 'Naziv recepta',
+            type: 'text',
+            placeholder: 'Unesite naziv recepta',
+            required: true,
+            validators: [Validators.required, Validators.minLength(3)]
+          },
+          {
+            name: 'ukus',
+            label: 'Ukus',
+            type: 'select',
+            required: true,
+            options: [
+              { value: 'slatko', label: 'Slatko' },
+              { value: 'slano', label: 'Slano' },
+              { value: 'ljuto', label: 'Ljuto' },
+              { value: 'kiselo', label: 'Kiselo' }
+            ],
+            validators: [Validators.required]
+          },
+          {
+            name: 'prilika',
+            label: 'Prilika',
+            type: 'select',
+            required: true,
+            options: [
+              { value: 'dorucak', label: 'Doručak' },
+              { value: 'rucak', label: 'Ručak' },
+              { value: 'vecera', label: 'Večera' },
+              { value: 'predjelo', label: 'Predjelo' },
+              { value: 'uzina', label: 'Užina' }
+            ],
+            validators: [Validators.required]
+          },
+          {
+            name: 'cookingTime',
+            label: 'Vreme kuvanja (minuti)',
+            type: 'number',
+            placeholder: 'Unesite vreme kuvanja',
+            required: true,
+            validators: [Validators.required, Validators.min(1)]
+          },
+          {
+            name: 'ingredients',
+            label: 'Sastojci',
+            type: 'textarea',
+            placeholder: 'Navedite sastojke (jedan po liniji)',
+            required: true,
+            validators: [Validators.required]
+          },
+          {
+            name: 'instructions',
+            label: 'Uputstvo za pripremu',
+            type: 'textarea',
+            placeholder: 'Unesite uputstvo za pripremu',
+            required: true,
+            validators: [Validators.required]
+          }
+        ];
+        break;
+    }
+
+    
+    if (this.customFields.length > 0) {
+      this.formFields = this.customFields;
+    }
+  }
+
+  private buildForm() {
+    const formControls: { [key: string]: any } = {};
+
+    this.formFields.forEach(field => {
+      const validators = field.validators || [];
+      formControls[field.name] = ['', validators];
+    });
+
+    this.form = this.fb.group(formControls);
+  }
+
+  onSubmit() {
+    if (this.form.valid) {
+      this.formSubmit.emit(this.form.value);
+      this.router.navigate(['/browse']);
+    } else {
+      this.form.markAllAsTouched();
+    }
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.form.get(fieldName);
+    if (field && field.errors && field.touched) {
+      if (field.errors['required']) return `${this.getFieldLabel(fieldName)} se mora upisati.`;
+      if (field.errors['email']) return 'Molimo unesite valjan email';
+      if (field.errors['minlength']) return `Minimalna dužina je ${field.errors['minlength'].requiredLength}`;
+      if (field.errors['min']) return `Minimalna vrednost je ${field.errors['min'].min}`;
+    }
+    return '';
+  }
+
+  private getFieldLabel(fieldName: string): string {
+    const field = this.formFields.find(f => f.name === fieldName);
+    return field ? field.label : fieldName;
+  }
+}
