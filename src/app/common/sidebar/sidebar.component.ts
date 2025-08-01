@@ -21,6 +21,7 @@ export class SidebarComponent {
   @Output() itemClick = new EventEmitter<SidebarItem>();
   @Output() toggleSidebar = new EventEmitter<boolean>();
   @Output() filterChange = new EventEmitter<{value: string, filterNumber: number}>();
+  @Output() searchChange = new EventEmitter<string>();
 
   onItemClick(item: SidebarItem): void {
     if (!item.disabled) {
@@ -37,5 +38,11 @@ export class SidebarComponent {
     const value = event.target.value;
     console.log(`Filter ${filterNumber} changed to:`, value);
     this.filterChange.emit({ value, filterNumber });
+  }
+
+  onSearchChange(event: any): void {
+    const searchTerm = event.target.value;
+    console.log('Search term changed to:', searchTerm);
+    this.searchChange.emit(searchTerm);
   }
 }

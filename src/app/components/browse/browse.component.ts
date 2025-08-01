@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { CardComponent, Recipe } from '../../common/card/card.component';
 import { SidebarComponent, SidebarItem } from '../../common/sidebar/sidebar.component';
+import { CardComponent } from '../../common/card/card.component';
+import { Recipe } from '../../common/card/card.component';
+import { RecipeService } from '../../common/recipe.service';
 
 @Component({
   selector: 'app-browse',
@@ -15,6 +17,7 @@ export class BrowseComponent implements OnInit {
   recipes: Recipe[] = [];
   filteredRecipes: Recipe[] = [];
   paginatedRecipes: Recipe[] = [];
+  loading: boolean = false;
   
   isSidebarOpen: boolean = false;
   sidebarItems: SidebarItem[] = [
@@ -25,6 +28,7 @@ export class BrowseComponent implements OnInit {
   ];
   
   filters = {
+    searchTerm: '',
     taste: '',
     meat: '',
     method: '',
@@ -38,27 +42,38 @@ export class BrowseComponent implements OnInit {
   totalPages: number = 0;
   pages: number[] = [];
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private recipeService: RecipeService) {}
 
   ngOnInit(): void {
     this.loadRecipes();
   }
 
   loadRecipes(): void {
-    this.http.get<{users: any[], recipes: Recipe[]}>('/assets/data.json')
-      .subscribe({
-        next: (data) => {
-          this.recipes = data.recipes;
-          this.applyFilters();
-        },
-        error: (error) => {
-          console.error('Error loading recipes:', error);
-        }
-      });
+    this.loading = true;
+    this.recipeService.getAllRecipes().subscribe({
+      next: (recipes) => {
+        this.recipes = recipes;
+        this.applyFilters();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading recipes:', error);
+        this.loading = false;
+      }
+    });
   }
 
   applyFilters(): void {
     this.filteredRecipes = this.recipes.filter(recipe => {
+      if (this.filters.searchTerm) {
+        const searchTerm = this.filters.searchTerm.toLowerCase();
+        const nameMatch = recipe.name.toLowerCase().includes(searchTerm);
+        const creatorMatch = recipe.creator.toLowerCase().includes(searchTerm);
+        if (!nameMatch && !creatorMatch) {
+          return false;
+        }
+      }
+
       if (this.filters.taste && recipe.taste !== this.filters.taste) {
         return false;
       }
@@ -162,6 +177,7 @@ export class BrowseComponent implements OnInit {
 
   clearAllFilters(): void {
     this.filters = {
+      searchTerm: '',
       taste: '',
       meat: '',
       method: '',
@@ -173,7 +189,8 @@ export class BrowseComponent implements OnInit {
   }
 
   hasActiveFilters(): boolean {
-    return this.filters.taste !== '' || 
+    return this.filters.searchTerm !== '' ||
+           this.filters.taste !== '' || 
            this.filters.meat !== '' || 
            this.filters.method !== '' || 
            this.filters.origin !== '' || 
@@ -223,5 +240,11 @@ export class BrowseComponent implements OnInit {
   onSidebarToggle(isOpen: boolean): void {
     console.log('Sidebar toggled:', isOpen);
     this.isSidebarOpen = isOpen;
+  }
+
+  onSearchChange(searchTerm: string): void {
+    console.log('Search term changed to:', searchTerm);
+    this.filters.searchTerm = searchTerm;
+    this.applyFilters();
   }
 }

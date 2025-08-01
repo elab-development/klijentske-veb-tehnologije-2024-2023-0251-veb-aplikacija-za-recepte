@@ -55,11 +55,31 @@ export class CardComponent {
 
   get tasteClasses(): string {
     const classMap: { [key: string]: string } = {
-      'slatko': 'bg-sw1 text-sw2',
-      'slano': 'bg-sa1 text-sa2', 
-      'ljuto': 'bg-sp1 text-sp2',
-      'kiselo': 'bg-so1 text-so2'
+      'slatko': 'bg-sw2 text-sw1',
+      'slano': 'bg-sa2 text-sa1', 
+      'ljuto': 'bg-sp2 text-sp1',
+      'kiselo': 'bg-so2 text-so1'
     };
     return classMap[this.recipe.taste] || 'bg-dark text-light';
+  }
+
+  get cardBackgroundClasses(): string {
+    const classMap: { [key: string]: string } = {
+      'slatko': 'bg-sw1',
+      'slano': 'bg-sa1', 
+      'ljuto': 'bg-sp1',
+      'kiselo': 'bg-so1'
+    };
+    return classMap[this.recipe.taste] || 'bg-light';
+  }
+
+  get cardTextClasses(): string {
+    const classMap: { [key: string]: string } = {
+      'slatko': 'text-sw2',
+      'slano': 'text-sa2', 
+      'ljuto': 'text-sp2',
+      'kiselo': 'text-so2'
+    };
+    return classMap[this.recipe.taste] || 'text-dark';
   }
 }

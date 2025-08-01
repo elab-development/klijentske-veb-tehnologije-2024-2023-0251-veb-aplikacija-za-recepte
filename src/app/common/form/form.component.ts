@@ -138,6 +138,60 @@ export class FormComponent implements OnInit {
             validators: [Validators.required]
           },
           {
+            name: 'tipMesa',
+            label: 'Tip mesa',
+            type: 'select',
+            required: false,
+            options: [
+              { value: '', label: 'Bez mesa' },
+              { value: 'piletina', label: 'Piletina' },
+              { value: 'curetina', label: 'Ćuretina' },
+              { value: 'svinjetina', label: 'Svinjetina' },
+              { value: 'govedina', label: 'Govedina' },
+              { value: 'jagnjetina', label: 'Jagnjetina' },
+              { value: 'teletina', label: 'Teletina' },
+              { value: 'riba', label: 'Riba' },
+              { value: 'morski-plodovi', label: 'Morski plodovi' }
+            ],
+            validators: []
+          },
+          {
+            name: 'nacinPripreme',
+            label: 'Način pripreme',
+            type: 'select',
+            required: true,
+            options: [
+              { value: 'przeno', label: 'Prženo' },
+              { value: 'peceno', label: 'Pečeno' },
+              { value: 'kuvano', label: 'Kuvano' },
+              { value: 'grilovano', label: 'Grilovano' },
+              { value: 'dimljeno', label: 'Dimljeno' },
+              { value: 'dinstano', label: 'Dinstano' },
+              { value: 'marinado', label: 'Marinado' },
+              { value: 'bareno', label: 'Bareno' }
+            ],
+            validators: [Validators.required]
+          },
+          {
+            name: 'poreklo',
+            label: 'Poreklo',
+            type: 'select',
+            required: true,
+            options: [
+              { value: 'srbija', label: 'Srbija' },
+              { value: 'kina', label: 'Kina' },
+              { value: 'italija', label: 'Italija' },
+              { value: 'francuska', label: 'Francuska' },
+              { value: 'grcka', label: 'Grčka' },
+              { value: 'turska', label: 'Turska' },
+              { value: 'spanija', label: 'Španija' },
+              { value: 'indija', label: 'Indija' },
+              { value: 'japan', label: 'Japan' },
+              { value: 'meksiko', label: 'Meksiko' }
+            ],
+            validators: [Validators.required]
+          },
+          {
             name: 'prilika',
             label: 'Prilika',
             type: 'select',
@@ -158,6 +212,14 @@ export class FormComponent implements OnInit {
             placeholder: 'Unesite vreme kuvanja',
             required: true,
             validators: [Validators.required, Validators.min(1)]
+          },
+          {
+            name: 'tezinaSastojaka',
+            label: 'Težina sastojaka (kg)',
+            type: 'number',
+            placeholder: 'Unesite ukupnu težinu sastojaka',
+            required: true,
+            validators: [Validators.required, Validators.min(0.1)]
           },
           {
             name: 'ingredients',
@@ -199,7 +261,6 @@ export class FormComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       this.formSubmit.emit(this.form.value);
-      this.router.navigate(['/browse']);
     } else {
       this.form.markAllAsTouched();
     }

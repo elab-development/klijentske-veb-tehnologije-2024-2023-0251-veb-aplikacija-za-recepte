@@ -1,4 +1,7 @@
-<div class="card bg-light border border-separator rounded-3xl shadow-base hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+<div 
+  class="card border border-separator rounded-3xl shadow-base hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+  [ngClass]="cardBackgroundClasses"
+>
   <a [routerLink]="['/recipe', recipe.id]" class="block cursor-pointer">
     <div class="card-image relative">
       <img 
@@ -10,17 +13,26 @@
     </div>
 
     <div class="card-content p-4">
-      <h3 class="text-xl font-bold text-dark mb-2 line-clamp-2">
+      <h3 
+        class="text-xl font-bold mb-2 line-clamp-2"
+        [ngClass]="cardTextClasses"
+      >
         {{ recipe.name }}
       </h3>
 
-      <p class="text-base text-so2/70 mb-3">
+      <p 
+        class="text-base mb-3 opacity-70"
+        [ngClass]="cardTextClasses"
+      >
         Autor: {{ recipe.creator }}
       </p>
 
       <div class="flex justify-between items-center">
         <div class="rating text-base">
-          <span class="text-so2 font-medium drop-shadow-sm">{{ displayRating }}</span>
+          <span 
+            class="font-medium drop-shadow-sm"
+            [ngClass]="cardTextClasses"
+          >{{ displayRating }}</span>
         </div>
         <div class="taste">
           <span 
