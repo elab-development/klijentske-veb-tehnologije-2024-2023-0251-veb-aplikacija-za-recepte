@@ -18,7 +18,7 @@ export class ReceptiButtonDirective {
             
             'text-md',
             'text-light',
-            'font-medium',
+            'text-md',
             
             'bg-so2',
             'hover:bg-light',

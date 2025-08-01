@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 export interface SidebarItem {
   label: string;
@@ -11,16 +10,17 @@ export interface SidebarItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
   @Input() items: SidebarItem[] = [];
-  @Input() isOpen: boolean = true;
+  @Input() isOpen: boolean = false;
   @Input() title: string = '';
   @Output() itemClick = new EventEmitter<SidebarItem>();
   @Output() toggleSidebar = new EventEmitter<boolean>();
+  @Output() filterChange = new EventEmitter<{value: string, filterNumber: number}>();
 
   onItemClick(item: SidebarItem): void {
     if (!item.disabled) {
@@ -31,5 +31,11 @@ export class SidebarComponent {
   onToggle(): void {
     this.isOpen = !this.isOpen;
     this.toggleSidebar.emit(this.isOpen);
+  }
+
+  onFilterChange(event: any, filterNumber: number): void {
+    const value = event.target.value;
+    console.log(`Filter ${filterNumber} changed to:`, value);
+    this.filterChange.emit({ value, filterNumber });
   }
 }

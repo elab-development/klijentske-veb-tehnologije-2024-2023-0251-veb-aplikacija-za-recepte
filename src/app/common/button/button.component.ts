@@ -17,15 +17,7 @@ export class ButtonComponent implements OnInit {
   @Output() buttonClick = new EventEmitter<Event>();
 
   private defaultClasses = [
-    'px-4',
-    'py-1',
-    'rounded-full',
-    'text-md',
-    'text-light',
-    'bg-so2',
-    'hover:bg-light',
-    'hover:text-so2',
-    'shadow-[1px_4px_4px_rgba(0,0,0,0.2)]',
+    
     'outline-none',
   ];
 
@@ -58,8 +50,8 @@ export class ButtonComponent implements OnInit {
         this.renderer.removeClass(buttonElement, 'hover:bg-light');
         this.renderer.removeClass(buttonElement, 'hover:text-so2');
         this.renderer.addClass(buttonElement, 'bg-so1');
-        this.renderer.addClass(buttonElement, 'hover:bg-so1');
-        this.renderer.addClass(buttonElement, 'text-dark');
+        this.renderer.addClass(buttonElement, 'text-so2');
+        this.renderer.addClass(buttonElement, 'hover:bg-light');
         break;
       case 'outline':
         this.renderer.removeClass(buttonElement, 'bg-so2');
