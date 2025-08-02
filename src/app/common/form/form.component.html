@@ -44,6 +44,26 @@
         </option>
       </select>
 
+      <div *ngIf="field.name === 'rating' && variant === 'rating'" class="flex items-center justify-center space-x-1 py-2">
+        <button
+          *ngFor="let star of getStars()"
+          type="button"
+          (click)="setRating(star)"
+          (mouseenter)="setHoveredRating(star)"
+          (mouseleave)="clearHoveredRating()"
+          class="text-3xl hover:scale-110 transition-transform duration-200 focus:outline-none"
+          [ngClass]="getStarClass(star)"
+        >
+          ⭐
+        </button>
+      </div>
+
+      <input
+        *ngIf="field.name === 'rating' && variant === 'rating'"
+        type="hidden"
+        [formControlName]="field.name"
+      />
+
       <div 
         *ngIf="getFieldError(field.name)" 
         class="text-red-500 text-xs mt-1 text-left w-full"

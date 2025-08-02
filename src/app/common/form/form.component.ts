@@ -7,7 +7,7 @@ import { ReceptiInputDirective } from '../input/input.directive';
 import { ReceptiSelectDirective } from '../select/select.directive';
 import { ReceptiFormDirective } from './form.directive';
 
-export type FormVariant = 'login' | 'signup' | 'recipe';
+export type FormVariant = 'login' | 'signup' | 'recipe' | 'rating';
 
 export interface FormField {
   name: string;
@@ -43,6 +43,8 @@ export class FormComponent implements OnInit {
   form!: FormGroup;
   formTitle: string = '';
   formFields: FormField[] = [];
+  selectedRating: number = 0;
+  hoveredRating: number = 0;
 
   constructor(private fb: FormBuilder, private router: Router) {}
 
@@ -239,6 +241,27 @@ export class FormComponent implements OnInit {
           }
         ];
         break;
+
+      case 'rating':
+        this.formTitle = 'Ocenite recept';
+        this.formFields = [
+          {
+            name: 'rating',
+            label: 'Ocena',
+            type: 'text',
+            required: true,
+            validators: [Validators.required]
+          },
+          {
+            name: 'comment',
+            label: 'Komentar',
+            type: 'textarea',
+            placeholder: 'Ostavite vaš komentar o receptu (opciono)',
+            required: false,
+            validators: []
+          }
+        ];
+        break;
     }
 
     
@@ -260,10 +283,38 @@ export class FormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.formSubmit.emit(this.form.value);
+      const formData = this.form.value;
+      if (this.variant === 'rating') {
+        formData.rating = this.selectedRating;
+      }
+      this.formSubmit.emit(formData);
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  setRating(rating: number): void {
+    this.selectedRating = rating;
+    if (this.form.get('rating')) {
+      this.form.get('rating')?.setValue(rating.toString());
+    }
+  }
+
+  setHoveredRating(rating: number): void {
+    this.hoveredRating = rating;
+  }
+
+  clearHoveredRating(): void {
+    this.hoveredRating = 0;
+  }
+
+  getStarClass(starIndex: number): string {
+    const rating = this.hoveredRating || this.selectedRating;
+    return starIndex <= rating ? 'text-yellow-400' : 'text-gray-300';
+  }
+
+  getStars(): number[] {
+    return [1, 2, 3, 4, 5];
   }
 
   getFieldError(fieldName: string): string {
