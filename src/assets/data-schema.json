@@ -46,9 +46,18 @@
           "type": "string",
           "description": "User's password",
           "minLength": 6
+        },
+        "liked": {
+          "type": "array",
+          "description": "Array of recipe IDs that the user has liked",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uniqueItems": true
         }
       },
-      "required": ["id", "username", "email", "password"],
+      "required": ["id", "username", "email", "password", "liked"],
       "additionalProperties": false
     },
     "Recipe": {

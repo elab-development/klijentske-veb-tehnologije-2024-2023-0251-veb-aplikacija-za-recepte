@@ -104,6 +104,52 @@ export class RecipeComponent implements OnInit {
     return this.authService.getCurrentUser() !== null;
   }
 
+  get isLiked(): boolean {
+    if (!this.isLoggedIn || !this.recipe) return false;
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.liked) return false;
+    return currentUser.liked.includes(this.recipe.id);
+  }
+
+  toggleLike(): void {
+    if (!this.isLoggedIn || !this.recipe) {
+      alert('Morate biti ulogovani da biste označili recept kao omiljeni!');
+      return;
+    }
+
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return;
+
+    // Initialize liked array if it doesn't exist
+    if (!currentUser.liked) {
+      currentUser.liked = [];
+    }
+
+    const recipeId = this.recipe.id;
+    const isCurrentlyLiked = currentUser.liked.includes(recipeId);
+
+    if (isCurrentlyLiked) {
+      // Remove from liked
+      const index = currentUser.liked.indexOf(recipeId);
+      if (index > -1) {
+        currentUser.liked.splice(index, 1);
+      }
+    } else {
+      // Add to liked
+      currentUser.liked.push(recipeId);
+    }
+
+    // Update the user in localStorage
+    this.authService.updateCurrentUser(currentUser);
+    
+    // TODO: In a real app, this would update the backend
+    console.log('Recipe like status changed:', {
+      recipeId,
+      isLiked: !isCurrentlyLiked,
+      userLikedRecipes: currentUser.liked
+    });
+  }
+
   onRatingSubmit(ratingData: any): void {
     if (!this.recipe || !this.isLoggedIn) {
       alert('Morate biti ulogovani da biste ostavili ocenu!');

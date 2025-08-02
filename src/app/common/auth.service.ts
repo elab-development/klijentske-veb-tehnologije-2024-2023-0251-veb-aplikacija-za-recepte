@@ -11,6 +11,7 @@ export interface User {
     username: string;
     email: string;
     password: string;
+    liked: number[];
 }
 
 @Injectable({
@@ -29,6 +30,10 @@ export class AuthService {
     private loadCurrentUser(): void {
         const userData = this.localStorageService.get<User>('currentUser');
         if (userData) {
+            // Initialize liked array if it doesn't exist (for backward compatibility)
+            if (!userData.liked) {
+                userData.liked = [];
+            }
             this.currentUser = userData;
         }
     }
@@ -61,6 +66,11 @@ export class AuthService {
                     );
                     
                     if (user) {
+                        // Initialize liked array if it doesn't exist (for backward compatibility)
+                        if (!user.liked) {
+                            user.liked = [];
+                        }
+                        
                         const token = `token_${user.id}_${Date.now()}`;
                         this.currentUser = user;
                         this.localStorageService.set('token', token);
@@ -76,5 +86,14 @@ export class AuthService {
                 }
             });
         });
+    }
+
+    updateCurrentUser(user: User): void {
+        // Ensure liked array exists
+        if (!user.liked) {
+            user.liked = [];
+        }
+        this.currentUser = user;
+        this.localStorageService.set('currentUser', user);
     }
 }

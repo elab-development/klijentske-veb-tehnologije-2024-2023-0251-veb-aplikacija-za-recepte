@@ -27,20 +27,34 @@
             {{ displayRating }}
           </span>
         </div>
-        <div class="taste">
-          <span 
-            class="inline-block px-4 py-2 text-lg font-medium rounded-full drop-shadow-lg"
-            [ngClass]="tasteClasses"
+        <div class="flex items-center space-x-4">
+          <button 
+            *ngIf="isLoggedIn"
+            (click)="toggleLike()"
+            class="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200 hover:scale-110 active:scale-95"
+            [title]="isLiked ? 'Ukloni iz omiljenih' : 'Dodaj u omiljene'"
           >
-            {{ tasteDisplay }}
-          </span>
+            <img 
+              [src]="isLiked ? '/assets/heart2-fill.png' : '/assets/heart2.png'"
+              [alt]="isLiked ? 'Omiljeno' : 'Dodaj u omiljene'"
+              class="w-6 h-6 transition-transform duration-200"
+              [ngClass]="{ 'animate-pulse': isLiked }"
+            />
+          </button>
+          <div class="taste">
+            <span 
+              class="inline-block px-4 py-2 text-lg font-medium rounded-full drop-shadow-lg"
+              [ngClass]="tasteClasses"
+            >
+              {{ tasteDisplay }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="container mx-auto px-6 py-8 relative">
-    <div class="absolute top-0 left-0 right-0 h-8 shadow-inner-top pointer-events-none"></div>
     <div class="max-w-4xl mx-auto relative z-10">
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormComponent } from '../../common/form/form.component';
@@ -16,12 +16,15 @@ import { Recipe } from '../../common/card/card.component';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   showRecipeForm: boolean = false;
   isSidebarOpen: boolean = false;
   currentUser: User | null = null;
   userRecipes: Recipe[] = [];
+  likedRecipes: Recipe[] = [];
   loading: boolean = false;
+  likedLoading: boolean = false;
+  activeTab: 'my-recipes' | 'liked-recipes' = 'my-recipes';
   
   sidebarItems: SidebarItem[] = [
     { label: 'Profil', route: '/profile' },
@@ -40,6 +43,7 @@ export class ProfileComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
     if (this.currentUser) {
       this.loadUserRecipes();
+      this.loadLikedRecipes();
     } else {
       this.router.navigate(['/login']);
     }
@@ -61,8 +65,54 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  loadLikedRecipes(): void {
+    if (!this.currentUser) return;
+    
+    this.likedLoading = true;
+    this.recipeService.getAllRecipes().subscribe({
+      next: (allRecipes) => {
+        this.likedRecipes = allRecipes.filter(recipe => 
+          this.currentUser?.liked && this.currentUser.liked.includes(recipe.id)
+        );
+        this.likedLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading liked recipes:', error);
+        this.likedLoading = false;
+      }
+    });
+  }
+
   toggleRecipeForm(): void {
     this.showRecipeForm = !this.showRecipeForm;
+  }
+
+  setActiveTab(tab: 'my-recipes' | 'liked-recipes'): void {
+    this.activeTab = tab;
+    
+    // Refresh data when switching to liked recipes to ensure it's up to date
+    if (tab === 'liked-recipes') {
+      this.refreshUserData();
+      this.loadLikedRecipes();
+    }
+  }
+
+  refreshUserData(): void {
+    // Refresh the current user data from localStorage in case it was updated
+    this.currentUser = this.authService.getCurrentUser();
+  }
+
+  @HostListener('window:focus', ['$event'])
+  onWindowFocus(event: any): void {
+    // Refresh data when window gains focus (user returns from another tab/window)
+    if (this.activeTab === 'liked-recipes') {
+      this.refreshUserData();
+      this.loadLikedRecipes();
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup if needed
   }
 
   onRecipeSubmit(recipeData: any): void {

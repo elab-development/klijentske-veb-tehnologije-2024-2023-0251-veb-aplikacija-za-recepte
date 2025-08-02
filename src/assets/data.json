@@ -4,19 +4,22 @@
       "id": 1,
       "username": "marko123",
       "email": "marko@example.com",
-      "password": "password123"
+      "password": "password123",
+      "liked": [2, 5]
     },
     {
       "id": 2,
       "username": "ana.petrovic",
       "email": "ana.petrovic@example.com",
-      "password": "securepass"
+      "password": "securepass",
+      "liked": [1, 3, 4]
     },
     {
       "id": 3,
       "username": "stefan_chef",
       "email": "stefan@example.com",
-      "password": "chefpass"
+      "password": "chefpass",
+      "liked": [1, 2]
     }
   ],
   "recipes": [
